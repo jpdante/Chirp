@@ -3,6 +3,7 @@ using System.Text;
 using Chirp.Repository;
 using Chirp.Server.Services;
 using Chirp.Server.Services.Mail;
+using IdGen.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -59,6 +60,8 @@ public static class Program
       c.IncludeXmlComments(xmlPath);
     });
 
+    builder.Services.AddIdGen(builder.Configuration.GetValue<int>("ServerIdentifier"));
+
     builder.Services.AddDbContext<ChirpContext>(options => options
       .UseNpgsql(builder.Configuration.GetConnectionString("Default"), o => o.MigrationsAssembly("Chirp.Server"))
       .UseSnakeCaseNamingConvention()
@@ -76,6 +79,8 @@ public static class Program
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""))
       };
     });
+
+    SetupMail(builder);
 
     var app = builder.Build();
 
