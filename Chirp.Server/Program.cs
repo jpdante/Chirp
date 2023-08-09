@@ -93,4 +93,16 @@ public static class Program
 
     app.Run();
   }
+
+  public static void SetupMail(WebApplicationBuilder builder) {
+    var mailConfigs = builder.Configuration.GetRequiredSection("Mail");
+    switch (mailConfigs.GetValue<string>("Provider")?.ToLower()) {
+      case "smtp":
+        var smtpMailConfig = mailConfigs.GetRequiredSection("Config").Get<SmtpMailService.SmtpMailConfig>() ?? throw new Exception("Mail provider 'SMTP' is not configured.");
+        builder.Services.AddSingleton<IEmailService, SmtpMailService>(x => new SmtpMailService(smtpMailConfig)); 
+        break;
+      default:
+        throw new Exception("Unknown mail provider or not configured. Please configure an email provider.");
+    }
+  }
 }
