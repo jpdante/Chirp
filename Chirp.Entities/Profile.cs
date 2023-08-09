@@ -10,17 +10,14 @@ public class Profile
   [Required, Key]
   public long ProfileId { get; set; }
 
+  [Required]
   public long AccountId { get; set; }
   public Account? Account { get; set; }
 
-  [Required]
-  [MinLength(3)]
-  [MaxLength(15)]
+  [Required, MinLength(3), MaxLength(15)]
   public string Handle { get; set; } = "";
 
-  [Required]
-  [MinLength(3)]
-  [MaxLength(50)]
+  [Required, MinLength(3), MaxLength(50)]
   public string Name { get; set; } = "";
 
   public string? Biography { get; set; }

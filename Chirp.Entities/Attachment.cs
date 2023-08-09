@@ -5,8 +5,7 @@ namespace Chirp.Entities;
 public class Attachment
 {
 
-  [Required]
-  [Key]
+  [Required, Key]
   public long AttachmentId { get; set; }
 
   [Required]

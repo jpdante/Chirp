@@ -12,5 +12,6 @@ public class ChirpContext : DbContext
   public DbSet<Profile> Profiles { get; set; }
   public DbSet<Post> Posts { get; set; }
   public DbSet<Attachment> Attachments { get; set; }
+  public DbSet<S3Object> S3Objects { get; set; }
 
 }
