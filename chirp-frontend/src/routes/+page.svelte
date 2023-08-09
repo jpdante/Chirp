@@ -1,4 +1,9 @@
-<script lang='ts'></script>
+<script lang='ts'>
+</script>
+
+<svelte:head>
+  <title>Chirp!</title>
+</svelte:head>
 
 <main class='main-wrapper'>
   <div class='login-wrapper'>
