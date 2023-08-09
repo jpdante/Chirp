@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Chirp.Entities;
 using Chirp.Repository;
+using IdGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +18,14 @@ public class AuthController : ControllerBase
   private readonly ILogger<AuthController> _logger;
   private readonly ChirpContext _context;
   private readonly IConfiguration _config;
+  private readonly IdGenerator _idGenerator;
   
-  public AuthController(ILogger<AuthController> logger, ChirpContext context, IConfiguration config)
+  public AuthController(ILogger<AuthController> logger, ChirpContext context, IConfiguration config, IdGenerator idGenerator)
   {
     _logger = logger;
     _context = context;
     _config = config;
+    _idGenerator = idGenerator;
   }
   
   [HttpPost("register", Name = "RegisterUser")]
@@ -44,6 +47,7 @@ public class AuthController : ControllerBase
       
       var account = new Account
       {
+        AccountId = _idGenerator.CreateId(),
         Email = model.Email,
         Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
         CreatedAt = DateTime.UtcNow,
@@ -55,6 +59,7 @@ public class AuthController : ControllerBase
       
       var profile = new Profile
       {
+        ProfileId = _idGenerator.CreateId(),
         AccountId = account.AccountId,
         Handle = model.Handle,
         Name = model.Name
