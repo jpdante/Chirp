@@ -5,9 +5,9 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Server", "Chirp.Server\Chirp.Server.csproj", "{F3875D2C-FBBE-4F20-973F-65BABC4DF8F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Repository", "Chirp.Repository\Chirp.Repository.csproj", "{CD4136C3-F5D4-4141-95A0-3683432BB5B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Repository", "Chirp.Repository\Chirp.Repository.csproj", "{CD4136C3-F5D4-4141-95A0-3683432BB5B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Entities", "Chirp.Entities\Chirp.Entities.csproj", "{E281A15C-AC2E-4EB4-A4B9-36CDC98EBAD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Entities", "Chirp.Entities\Chirp.Entities.csproj", "{E281A15C-AC2E-4EB4-A4B9-36CDC98EBAD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

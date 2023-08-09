@@ -10,5 +10,7 @@ public class ChirpContext : DbContext
 
   public DbSet<Account> Accounts { get; set; }
   public DbSet<Profile> Profiles { get; set; }
+  public DbSet<Post> Posts { get; set; }
+  public DbSet<Attachment> Attachments { get; set; }
 
 }
