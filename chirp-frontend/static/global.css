@@ -1,0 +1,15 @@
+body {
+  background-color: #000000;
+  color: #e7e9ea;
+
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Inter', sans-serif;
+}
+
+::selection {
+  background-color: #e7e9ea;
+  color: #000000;
+}
