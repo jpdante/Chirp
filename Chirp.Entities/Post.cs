@@ -20,4 +20,5 @@ public class Post
   public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
 
   public ICollection<Attachment>? Attachments { get; set; }
+  public ICollection<PostLike>? PostLikes { get; set; }
 }

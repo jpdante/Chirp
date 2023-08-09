@@ -12,6 +12,9 @@ public class S3Object {
   [Required]
   public string ObjectKey { get; set; } = "";
 
+  public long? AttachmentId { get; set; }
+  public Attachment? Attachment { get; set; }
+
   [Required]
   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
