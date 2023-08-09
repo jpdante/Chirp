@@ -76,6 +76,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("login", Name = "LoginUser")]
+  [AllowAnonymous]
   public async Task<IActionResult> Login([FromBody] LoginDto model, CancellationToken cToken)
   {
     await using var transaction = await _context.Database.BeginTransactionAsync(cToken);
