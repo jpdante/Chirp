@@ -6,7 +6,6 @@ namespace Chirp.Entities;
 [Index(nameof(Email), IsUnique = true)]
 public class Account
 {
-
   [Required, Key]
   public ulong AccountId { get; set; }
 
@@ -31,5 +30,4 @@ public class Account
   public DateTime? DeletedAt { get; set; }
 
   public ICollection<Profile> Profiles { get; }
-
 }
