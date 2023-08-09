@@ -43,3 +43,14 @@ public record ForgotPasswordDto
   [Required]
   public string Email { get; set; } = null!;
 }
+
+public record ResetPasswordDto
+{
+  [Required]
+  public Guid Token { get; set; }
+
+  [MinLength(6, ErrorMessage = "Password should be at least 6 characters long")]
+  [Password]
+  [Required]
+  public string Password { get; set; } = null!;
+}

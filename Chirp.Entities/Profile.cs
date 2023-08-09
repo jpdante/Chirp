@@ -6,7 +6,6 @@ namespace Chirp.Entities;
 [Index(nameof(Handle), IsUnique = true)]
 public class Profile
 {
-
   [Required, Key]
   public long ProfileId { get; set; }
 
@@ -27,5 +26,4 @@ public class Profile
   public string? BackgroundPicture { get; set; }
 
   public ICollection<Post>? Posts { get; set; }
-
 }

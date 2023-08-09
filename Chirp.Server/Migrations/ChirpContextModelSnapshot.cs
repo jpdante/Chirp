@@ -106,6 +106,31 @@ namespace Chirp.Server.Migrations
                     b.ToTable("attachments", (string)null);
                 });
 
+            modelBuilder.Entity("Chirp.Entities.ForgotPasswordToken", b =>
+                {
+                    b.Property<Guid>("TokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("token_id");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("account_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.HasKey("TokenId")
+                        .HasName("pk_forgot_password_tokens");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_forgot_password_tokens_account_id");
+
+                    b.ToTable("forgot_password_tokens", (string)null);
+                });
+
             modelBuilder.Entity("Chirp.Entities.Post", b =>
                 {
                     b.Property<long>("PostId")
@@ -228,6 +253,18 @@ namespace Chirp.Server.Migrations
                         .HasConstraintName("fk_attachments_posts_post_id");
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Chirp.Entities.ForgotPasswordToken", b =>
+                {
+                    b.HasOne("Chirp.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_forgot_password_tokens_accounts_account_id");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Chirp.Entities.Post", b =>

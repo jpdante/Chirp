@@ -2,8 +2,8 @@
 
 namespace Chirp.Entities; 
 
-public class Post {
-
+public class Post
+{
   [Required, Key]
   public long PostId { get; set; }
 

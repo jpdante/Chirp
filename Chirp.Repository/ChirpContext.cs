@@ -5,7 +5,6 @@ namespace Chirp.Repository;
 
 public class ChirpContext : DbContext
 {
-
   public ChirpContext(DbContextOptions<ChirpContext> options) : base(options) { }
 
   public DbSet<Account> Accounts { get; set; }
@@ -13,5 +12,5 @@ public class ChirpContext : DbContext
   public DbSet<Post> Posts { get; set; }
   public DbSet<Attachment> Attachments { get; set; }
   public DbSet<S3Object> S3Objects { get; set; }
-
+  public DbSet<ForgotPasswordToken> ForgotPasswordTokens { get; set; }
 }
