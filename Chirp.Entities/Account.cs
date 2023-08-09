@@ -7,7 +7,7 @@ namespace Chirp.Entities;
 public class Account
 {
   [Required, Key]
-  public ulong AccountId { get; set; }
+  public long AccountId { get; set; }
 
   [Required]
   public bool Active { get; set; }

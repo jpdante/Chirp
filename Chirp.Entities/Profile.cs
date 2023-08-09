@@ -8,9 +8,9 @@ public class Profile
 {
 
   [Required, Key]
-  public ulong ProfileId { get; set; }
+  public long ProfileId { get; set; }
 
-  public ulong AccountId { get; set; }
+  public long AccountId { get; set; }
   public Account Account { get; set; }
 
   [Required]
