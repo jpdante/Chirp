@@ -163,6 +163,8 @@ public class AuthController : ControllerBase
                      $"{_config["Frontend:Url"]}/resetPassword/{forgotPasswordToken.TokenId.ToString()}";
 
       await _mailService.SendEmailAsync(message, cToken);
+      
+      await transaction.CommitAsync(cToken);
 
       return Ok(new { message = "Password reset email sent" });
     }
