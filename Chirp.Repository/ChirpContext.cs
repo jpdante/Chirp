@@ -1,13 +1,14 @@
 ﻿using Chirp.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.Repository; 
+namespace Chirp.Repository;
 
-public class ChipContext : DbContext {
+public class ChirpContext : DbContext
+{
 
-  public ChipContext() { }
+  public ChirpContext(DbContextOptions<ChirpContext> options) : base(options) { }
 
   public DbSet<Account> Accounts { get; set; }
   public DbSet<Profile> Profiles { get; set; }
-  
+
 }

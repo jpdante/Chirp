@@ -1,4 +1,6 @@
 using System.Reflection;
+using Chirp.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace Chirp.Server;
@@ -17,11 +19,16 @@ public static class Program
     builder.Services.AddSwaggerGen(c =>
     {
       c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chirp", Version = "v1" });
-      
+
       var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
       var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
       c.IncludeXmlComments(xmlPath);
     });
+
+    builder.Services.AddDbContext<ChirpContext>(options => options
+        .UseNpgsql(builder.Configuration.GetConnectionString("Default"), o => o.MigrationsAssembly("Chirp.Server"))
+        .UseSnakeCaseNamingConvention()
+    );
 
     var app = builder.Build();
 
@@ -34,6 +41,7 @@ public static class Program
 
     app.UseHttpsRedirection();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
