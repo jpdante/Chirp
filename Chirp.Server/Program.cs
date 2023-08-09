@@ -1,6 +1,8 @@
 using System.Reflection;
 using System.Text;
 using Chirp.Repository;
+using Chirp.Server.Services;
+using Chirp.Server.Services.Mail;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -99,7 +101,7 @@ public static class Program
     switch (mailConfigs.GetValue<string>("Provider")?.ToLower()) {
       case "smtp":
         var smtpMailConfig = mailConfigs.GetRequiredSection("Config").Get<SmtpMailService.SmtpMailConfig>() ?? throw new Exception("Mail provider 'SMTP' is not configured.");
-        builder.Services.AddSingleton<IEmailService, SmtpMailService>(x => new SmtpMailService(smtpMailConfig)); 
+        builder.Services.AddSingleton<IMailService, SmtpMailService>(x => new SmtpMailService(smtpMailConfig)); 
         break;
       default:
         throw new Exception("Unknown mail provider or not configured. Please configure an email provider.");
