@@ -5,10 +5,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Chirp.Entities;
 
 [Index(nameof(AccountId), IsUnique = true)]
-public class ForgotPasswordToken
+public class Token
 {
+  public enum TokenType
+  {
+    ResetPassword = 0,
+    EmailVerification = 1
+  }
+  
   [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
   public Guid TokenId { get; set; }
+  
+  public TokenType Type { get; set; }
   
   [Required]
   public long AccountId { get; set; }

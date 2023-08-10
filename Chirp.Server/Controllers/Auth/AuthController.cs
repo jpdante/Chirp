@@ -146,13 +146,14 @@ public class AuthController : ControllerBase
         return BadRequest(new { message = "Email is incorrect" });
       }
 
-      var forgotPasswordToken = new ForgotPasswordToken
+      var forgotPasswordToken = new Token
       {
         AccountId = account.AccountId,
-        CreatedAt = DateTime.UtcNow
+        CreatedAt = DateTime.UtcNow,
+        Type = Token.TokenType.ResetPassword
       };
 
-      await _context.ForgotPasswordTokens.AddAsync(forgotPasswordToken, cToken);
+      await _context.Tokens.AddAsync(forgotPasswordToken, cToken);
       await _context.SaveChangesAsync(cToken);
 
       var message = new MailMessage();
@@ -163,7 +164,7 @@ public class AuthController : ControllerBase
                      $"{_config["Frontend:Url"]}/resetPassword/{forgotPasswordToken.TokenId.ToString()}";
 
       await _mailService.SendEmailAsync(message, cToken);
-      
+
       await transaction.CommitAsync(cToken);
 
       return Ok(new { message = "Password reset email sent" });
@@ -183,17 +184,17 @@ public class AuthController : ControllerBase
     await using var transaction = await _context.Database.BeginTransactionAsync(cToken);
     try
     {
-      var token = await _context.ForgotPasswordTokens.FirstOrDefaultAsync(x => x.TokenId == model.Token, cToken);
+      var token = await _context.Tokens.FirstOrDefaultAsync(x => x.TokenId == model.Token, cToken);
       if (token == null)
       {
         return NotFound(new { message = "Token is invalid" });
       }
-      
+
       if (token.CreatedAt.AddHours(1) < DateTime.UtcNow)
       {
         return BadRequest(new { message = "Token has expired" });
       }
-      
+
       var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == token.AccountId, cToken);
       if (account == null)
       {
@@ -202,9 +203,9 @@ public class AuthController : ControllerBase
 
       account.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
       account.LastUpdatedAt = DateTime.UtcNow;
-      
+
       _context.Accounts.Update(account);
-      _context.ForgotPasswordTokens.Remove(token);
+      _context.Tokens.Remove(token);
       await _context.SaveChangesAsync(cToken);
 
       await transaction.CommitAsync(cToken);

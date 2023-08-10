@@ -106,31 +106,6 @@ namespace Chirp.Server.Migrations
                     b.ToTable("attachments", (string)null);
                 });
 
-            modelBuilder.Entity("Chirp.Entities.ForgotPasswordToken", b =>
-                {
-                    b.Property<Guid>("TokenId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("token_id");
-
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("account_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.HasKey("TokenId")
-                        .HasName("pk_forgot_password_tokens");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_forgot_password_tokens_account_id");
-
-                    b.ToTable("forgot_password_tokens", (string)null);
-                });
-
             modelBuilder.Entity("Chirp.Entities.Post", b =>
                 {
                     b.Property<long>("PostId")
@@ -273,6 +248,35 @@ namespace Chirp.Server.Migrations
                     b.ToTable("s3objects", (string)null);
                 });
 
+            modelBuilder.Entity("Chirp.Entities.Token", b =>
+                {
+                    b.Property<Guid>("TokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("token_id");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("account_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("TokenId")
+                        .HasName("pk_tokens");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_tokens_account_id");
+
+                    b.ToTable("tokens", (string)null);
+                });
+
             modelBuilder.Entity("Chirp.Entities.Attachment", b =>
                 {
                     b.HasOne("Chirp.Entities.Post", "Post")
@@ -283,18 +287,6 @@ namespace Chirp.Server.Migrations
                         .HasConstraintName("fk_attachments_posts_post_id");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Chirp.Entities.ForgotPasswordToken", b =>
-                {
-                    b.HasOne("Chirp.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_forgot_password_tokens_accounts_account_id");
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Chirp.Entities.Post", b =>
@@ -350,6 +342,18 @@ namespace Chirp.Server.Migrations
                         .HasConstraintName("fk_s3objects_attachments_attachment_id");
 
                     b.Navigation("Attachment");
+                });
+
+            modelBuilder.Entity("Chirp.Entities.Token", b =>
+                {
+                    b.HasOne("Chirp.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tokens_accounts_account_id");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Chirp.Entities.Account", b =>
