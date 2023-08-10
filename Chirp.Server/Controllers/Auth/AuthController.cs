@@ -32,7 +32,12 @@ public class AuthController : ControllerBase
     _idGenerator = idGenerator;
     _mailService = mailService;
   }
-
+  
+  /// <summary>
+  /// Registers a user, pending email verification
+  /// </summary>
+  /// <response code="200">Registration successful</response>
+  /// <response code="400">Email or handle already exists</response>
   [HttpPost("register", Name = "RegisterUser")]
   [AllowAnonymous]
   public async Task<IActionResult> Register([FromBody] RegisterDto model, CancellationToken cToken)
@@ -103,6 +108,11 @@ public class AuthController : ControllerBase
     }
   }
   
+  /// <summary>
+  /// Confirms a user's email address
+  /// </summary>
+  /// <response code="200">Email confirmed successfully</response>
+  /// <response code="400">Token is invalid</response>
   [HttpPost("confirm-email", Name = "ConfirmEmail")]
   [AllowAnonymous]
   public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto model, CancellationToken cToken)
@@ -149,6 +159,11 @@ public class AuthController : ControllerBase
     }
   }
 
+  /// <summary>
+  /// Logs user in for 1 hour, returning a JWT Bearer token
+  /// </summary>
+  /// <response code="200">Login successful</response>
+  /// <response code="400">Email or password is incorrect</response>
   [HttpPost("login", Name = "LoginUser")]
   [AllowAnonymous]
   public async Task<IActionResult> Login([FromBody] LoginDto model, CancellationToken cToken)
@@ -197,6 +212,11 @@ public class AuthController : ControllerBase
     return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
   }
 
+  /// <summary>
+  /// Sends a password reset email to the user
+  /// </summary>
+  /// <response code="200">Email sent successfully</response>
+  /// <response code="400">Email is incorrect</response>
   [HttpPost("forgotPassword", Name = "ForgotPassword")]
   [AllowAnonymous]
   public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model, CancellationToken cToken)
@@ -241,6 +261,11 @@ public class AuthController : ControllerBase
     }
   }
 
+  /// <summary>
+  /// Resets the user's password with the provided token
+  /// </summary>
+  /// <response code="200">Password reset successfully</response>
+  /// <response code="400">Token is invalid or has expired</response>
   [HttpPost("resetPassword", Name = "ResetPassword")]
   [AllowAnonymous]
   public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model, CancellationToken cToken)
@@ -251,7 +276,7 @@ public class AuthController : ControllerBase
       var token = await _context.Tokens.FirstOrDefaultAsync(x => x.TokenId == model.Token, cToken);
       if (token == null)
       {
-        return NotFound(new { message = "Token is invalid" });
+        return BadRequest(new { message = "Token is invalid" });
       }
 
       if (token.CreatedAt.AddHours(1) < DateTime.UtcNow)
@@ -262,7 +287,7 @@ public class AuthController : ControllerBase
       var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == token.AccountId, cToken);
       if (account == null)
       {
-        return NotFound(new { message = "Account not found" });
+        return BadRequest(new { message = "Account not found" });
       }
 
       account.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
