@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Chirp.Repository\Chirp.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Post\" />
+  </ItemGroup>
+
 </Project>
