@@ -1,4 +1,5 @@
 ﻿using Chirp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.Server.Controllers.Post;
@@ -22,6 +23,7 @@ public class PostController : ControllerBase
   /// <response code="200">Post found</response>
   /// <response code="404">Post not found</response>
   [HttpPost]
+  [AllowAnonymous]
   public async Task<IActionResult> GetPost() {
     return Ok("Post Get");
   }
@@ -32,6 +34,7 @@ public class PostController : ControllerBase
   /// <response code="200">Post created</response>
   /// <response code="500">Failed to update post</response>
   [HttpPut]
+  [Authorize]
   public async Task<IActionResult> CreatePost() {
     return Ok("Post Created");
   }
@@ -43,6 +46,7 @@ public class PostController : ControllerBase
   /// <response code="404">Post not found</response>
   /// <response code="500">Failed to update post</response>
   [HttpPatch]
+  [Authorize]
   public async Task<IActionResult> UpdatePost() {
     return Ok("Post Updated");
   }
@@ -54,6 +58,7 @@ public class PostController : ControllerBase
   /// <response code="404">Post not found</response>
   /// <response code="500">Failed to update post</response>
   [HttpDelete]
+  [Authorize]
   public async Task<IActionResult> DeletePost()
   {
     return Ok("Post Deleted");
