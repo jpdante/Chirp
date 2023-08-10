@@ -54,3 +54,9 @@ public record ResetPasswordDto
   [Required]
   public string Password { get; set; } = null!;
 }
+
+public record ConfirmEmailDto
+{
+  [Required]
+  public Guid Token { get; set; }
+}

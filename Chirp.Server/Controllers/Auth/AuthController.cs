@@ -73,6 +73,24 @@ public class AuthController : ControllerBase
       await _context.Profiles.AddAsync(profile, cToken);
       await _context.SaveChangesAsync(cToken);
 
+      var verifyAccountToken = new Token
+      {
+        AccountId = account.AccountId,
+        CreatedAt = DateTime.UtcNow,
+        Type = Token.TokenType.EmailVerification
+      };
+
+      await _context.Tokens.AddAsync(verifyAccountToken, cToken);
+      await _context.SaveChangesAsync(cToken);
+
+      var message = new MailMessage();
+      message.To.Add(new MailAddress(account.Email));
+      message.Subject = "Welcome to Chirp - Confirm your email";
+      message.Body = $"Hello {profile.Name}!\n\n" +
+                     $"Please confirm your email by clicking this link: " +
+                     $"{_config["Frontend:Url"]}/confirm-email/{verifyAccountToken.TokenId}";
+      await _mailService.SendEmailAsync(message, cToken);
+
       await transaction.CommitAsync(cToken);
 
       return Ok(new { message = "User registered successfully" });
@@ -82,6 +100,52 @@ public class AuthController : ControllerBase
       await transaction.RollbackAsync(cToken);
       _logger.LogError(ex, "Error while registering user");
       return BadRequest(new { message = "Error while registering user" });
+    }
+  }
+  
+  [HttpPost("confirm-email", Name = "ConfirmEmail")]
+  [AllowAnonymous]
+  public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto model, CancellationToken cToken)
+  {
+    await using var transaction = await _context.Database.BeginTransactionAsync(cToken);
+    try
+    {
+      var token = await _context.Tokens.FirstOrDefaultAsync(x => x.TokenId == model.Token, cToken);
+      if (token == null)
+      {
+        return BadRequest(new { message = "Token is invalid" });
+      }
+
+      if (token.Type != Token.TokenType.EmailVerification)
+      {
+        return BadRequest(new { message = "Token is invalid" });
+      }
+
+      var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == token.AccountId, cToken);
+      if (account == null)
+      {
+        return BadRequest(new { message = "Token is invalid" });
+      }
+
+      var now = DateTime.UtcNow;
+      account.Active = true;
+      account.LastUpdatedAt = now;
+      account.LastConfirmedAt = now;
+      
+      _context.Accounts.Update(account);
+      await _context.SaveChangesAsync(cToken);
+      
+      _context.Tokens.Remove(token);
+
+      await transaction.CommitAsync(cToken);
+
+      return Ok(new { message = "Email confirmed successfully" });
+    }
+    catch (Exception ex)
+    {
+      await transaction.RollbackAsync(cToken);
+      _logger.LogError(ex, "Error while confirming email");
+      return BadRequest(new { message = "Error while confirming email" });
     }
   }
 
