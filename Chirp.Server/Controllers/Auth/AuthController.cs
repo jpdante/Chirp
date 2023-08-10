@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
   /// </summary>
   /// <response code="200">Email confirmed successfully</response>
   /// <response code="400">Token is invalid</response>
-  [HttpPost("confirm-email", Name = "ConfirmEmail")]
+  [HttpPost("confirmEmail", Name = "ConfirmEmail")]
   [AllowAnonymous]
   public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto model, CancellationToken cToken)
   {
